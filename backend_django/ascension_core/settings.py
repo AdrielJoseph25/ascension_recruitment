@@ -33,6 +33,11 @@ if BACKEND_HOST:
     # Support multiple host values split by commas
     ALLOWED_HOSTS.extend([h.strip() for h in BACKEND_HOST.split(',')])
 
+# Automatically allow Render dynamic hostname
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 
 # Application definition
 
