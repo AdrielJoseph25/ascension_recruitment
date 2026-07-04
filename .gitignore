@@ -1,0 +1,17 @@
+# Virtual environments
+backend_django/env/
+backend_django/__pycache__/
+backend_django/*/__pycache__/
+backend_django/*.pyc
+backend_django/db.sqlite3
+backend_django/media/
+
+# Node modules & frontend builds
+frontend_react/node_modules/
+frontend_react/dist/
+frontend_react/.env
+frontend_react/.env.local
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --color-brand-green: #22C55E; /* Lighter vibrant green (green-500) */
+  --color-brand-green-dark: #15803D; /* Lighter forest green (green-700) for text and blocks */
+  --color-brand-green-darkest: #032212; /* Deep forest black/green for backgrounds */
+  --color-brand-orange: #FF7B12; /* Vibrant orange matching the logo */
+}
+
+body {
+  font-family: var(--font-sans);
+  @apply bg-white text-gray-900 antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
