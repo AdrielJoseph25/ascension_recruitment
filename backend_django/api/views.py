@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 OTP_STORAGE = {}
 VERIFIED_EMAILS = {}
 
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'sujay@ascension.net.in')
+
 def send_resend_email(subject, body, to_email, attachments=None):
     """
     Sends email via Resend's REST API using the configured RESEND_API_KEY.
@@ -84,7 +86,7 @@ class EnquiryCreate(generics.CreateAPIView):
             f"Type: {enquiry.enquiry_type}\n"
             f"Message:\n{enquiry.message}"
         )
-        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com')
+        send_resend_email(admin_subject, admin_body, ADMIN_EMAIL)
 
         # 2. Send confirmation email to candidate
         candidate_subject = "Thank you for reaching out to Ascension"
@@ -141,7 +143,7 @@ class JobApplicationCreate(generics.CreateAPIView):
             f"Resume Filename: {os.path.basename(application.resume.name) if application.resume else 'No file uploaded'}\n\n"
             f"The candidate's resume PDF has been attached directly to this email."
         )
-        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com', attachments=attachments)
+        send_resend_email(admin_subject, admin_body, ADMIN_EMAIL, attachments=attachments)
 
         # 2. Send confirmation email to candidate
         candidate_subject = f"Application Received: {application.job.title if application.job else 'Position'}"
