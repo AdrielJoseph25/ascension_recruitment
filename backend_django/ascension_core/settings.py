@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#513e57dd620f12db333cca0f2d05f439-----render secret key------
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure--t0q&t34r1m#h#s_x=8r3*b-7l*t3#t8n*1!k%#6&w^n8z*d2s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -161,8 +162,15 @@ CORS_ALLOWED_ORIGINS = [
 ]
 FRONTEND_URL = os.environ.get('FRONTEND_URL')
 if FRONTEND_URL:
-    # Support multiple frontend URLs split by commas
     CORS_ALLOWED_ORIGINS.extend([url.strip() for url in FRONTEND_URL.split(',')])
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+if FRONTEND_URL:
+    CSRF_TRUSTED_ORIGINS.extend([url.strip() for url in FRONTEND_URL.split(',')])
 
 DEFAULT_AUTO_FIELD = 'django_mongodb_backend.fields.ObjectIdAutoField'
 
