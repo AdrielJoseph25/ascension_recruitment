@@ -1,0 +1,81 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact.php",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/about.php",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/services",
+      "destination": "/#services",
+      "permanent": true
+    },
+    {
+      "source": "/services.html",
+      "destination": "/#services",
+      "permanent": true
+    },
+    {
+      "source": "/services.php",
+      "destination": "/#services",
+      "permanent": true
+    },
+    {
+      "source": "/careers",
+      "destination": "/jobseeker",
+      "permanent": true
+    },
+    {
+      "source": "/careers.html",
+      "destination": "/jobseeker",
+      "permanent": true
+    },
+    {
+      "source": "/jobs",
+      "destination": "/jobseeker",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
