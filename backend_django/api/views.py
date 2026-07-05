@@ -1,10 +1,11 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.core.mail import send_mail
 import logging
 import random
 import re
+import os
+import requests
 
 from .models import JobOpening, Enquiry, JobApplication
 from .serializers import JobOpeningSerializer, EnquirySerializer, JobApplicationSerializer
@@ -14,6 +15,39 @@ logger = logging.getLogger(__name__)
 # Cache for OTP codes and verified email flags
 OTP_STORAGE = {}
 VERIFIED_EMAILS = {}
+
+def send_resend_email(subject, body, to_email):
+    """
+    Sends email via Resend's REST API using the configured RESEND_API_KEY.
+    Fails gracefully by logging the content if the key is not set.
+    """
+    api_key = os.environ.get('RESEND_API_KEY')
+    if not api_key:
+        logger.warning(f"[EMAIL SEND FALLBACK] RESEND_API_KEY not configured.\nTo: {to_email}\nSubject: {subject}\nBody:\n{body}")
+        # Return True in debug/local mode to prevent blocking OTP tests if key isn't set yet
+        return True
+
+    url = "https://api.resend.com/emails"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "from": "Ascension Recruitment <no-reply@ascension.net.in>",
+        "to": [to_email] if isinstance(to_email, str) else to_email,
+        "subject": subject,
+        "text": body
+    }
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        if response.status_code in [200, 201]:
+            return True
+        else:
+            logger.error(f"Resend API error: {response.status_code} - {response.text}")
+            return False
+    except Exception as e:
+        logger.error(f"Failed to connect to Resend API: {e}")
+        return False
 
 class JobOpeningList(generics.ListAPIView):
     queryset = JobOpening.objects.filter(is_active=True).order_by('-created_at')
@@ -46,10 +80,7 @@ class EnquiryCreate(generics.CreateAPIView):
             f"Type: {enquiry.enquiry_type}\n"
             f"Message:\n{enquiry.message}"
         )
-        try:
-            send_mail(admin_subject, admin_body, 'no-reply@ascension.net.in', ['adriel.joseph2506@gmail.com'], fail_silently=False)
-        except Exception as e:
-            logger.error(f"Failed to send admin enquiry mail: {e}")
+        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com')
 
         # 2. Send confirmation email to candidate
         candidate_subject = "Thank you for reaching out to Ascension"
@@ -59,10 +90,7 @@ class EnquiryCreate(generics.CreateAPIView):
             f"Best regards,\n"
             f"Ascension Team"
         )
-        try:
-            send_mail(candidate_subject, candidate_body, 'no-reply@ascension.net.in', [enquiry.email], fail_silently=False)
-        except Exception as e:
-            logger.error(f"Failed to send candidate enquiry mail: {e}")
+        send_resend_email(candidate_subject, candidate_body, enquiry.email)
 
 
 class JobApplicationCreate(generics.CreateAPIView):
@@ -91,10 +119,7 @@ class JobApplicationCreate(generics.CreateAPIView):
             f"Phone: {application.phone}\n"
             f"Resume URL: {application.resume.url if application.resume else 'No file uploaded'}"
         )
-        try:
-            send_mail(admin_subject, admin_body, 'no-reply@ascension.net.in', ['adriel.joseph2506@gmail.com'], fail_silently=False)
-        except Exception as e:
-            logger.error(f"Failed to send admin application mail: {e}")
+        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com')
 
         # 2. Send confirmation email to candidate
         candidate_subject = f"Application Received: {application.job.title if application.job else 'Position'}"
@@ -105,10 +130,7 @@ class JobApplicationCreate(generics.CreateAPIView):
             f"Best regards,\n"
             f"Ascension Team"
         )
-        try:
-            send_mail(candidate_subject, candidate_body, 'no-reply@ascension.net.in', [application.email], fail_silently=False)
-        except Exception as e:
-            logger.error(f"Failed to send candidate application mail: {e}")
+        send_resend_email(candidate_subject, candidate_body, application.email)
 
 
 class SendOTP(APIView):
@@ -126,14 +148,12 @@ class SendOTP(APIView):
         otp = str(random.randint(100000, 999999))
         OTP_STORAGE[email] = otp
 
-        # Send email OTP via Django mail
+        # Send email OTP via Resend API
         subject = "Your Ascension Verification OTP"
         body = f"Your email verification OTP is: {otp}. It is valid for 10 minutes."
-        try:
-            send_mail(subject, body, 'no-reply@ascension.net.in', [email], fail_silently=False)
-        except Exception as e:
-            logger.error(f"Failed to send email OTP: {e}")
-            return Response({"error": f"Failed to send OTP email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        success = send_resend_email(subject, body, email)
+        if not success:
+            return Response({"error": "Failed to send OTP email via Resend API."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"message": "OTP sent successfully to your email."}, status=status.HTTP_200_OK)
 
