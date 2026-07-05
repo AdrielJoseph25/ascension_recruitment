@@ -6,6 +6,7 @@ import random
 import re
 import os
 import requests
+import base64
 
 from .models import JobOpening, Enquiry, JobApplication
 from .serializers import JobOpeningSerializer, EnquirySerializer, JobApplicationSerializer
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 OTP_STORAGE = {}
 VERIFIED_EMAILS = {}
 
-def send_resend_email(subject, body, to_email):
+def send_resend_email(subject, body, to_email, attachments=None):
     """
     Sends email via Resend's REST API using the configured RESEND_API_KEY.
     Fails gracefully by logging the content if the key is not set.
@@ -38,6 +39,9 @@ def send_resend_email(subject, body, to_email):
         "subject": subject,
         "text": body
     }
+    if attachments:
+        payload["attachments"] = attachments
+
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=10)
         if response.status_code in [200, 201]:
@@ -111,15 +115,33 @@ class JobApplicationCreate(generics.CreateAPIView):
         # Consume verified token
         VERIFIED_EMAILS.pop(application.email, None)
         
-        # 1. Send notification email to admin
+        # 1. Prepare resume attachment if available
+        attachments = []
+        if application.resume:
+            try:
+                application.resume.open('rb')
+                file_data = application.resume.read()
+                base64_content = base64.b64encode(file_data).decode('utf-8')
+                filename = os.path.basename(application.resume.name)
+                attachments.append({
+                    "filename": filename,
+                    "content": base64_content
+                })
+            except Exception as e:
+                logger.error(f"Failed to read resume file for attachment: {e}")
+            finally:
+                application.resume.close()
+
+        # 2. Send notification email to admin (with attachment)
         admin_subject = f"New Job Application: {application.job.title if application.job else 'Unknown Position'}"
         admin_body = (
             f"Candidate Name: {application.name}\n"
             f"Email: {application.email}\n"
             f"Phone: {application.phone}\n"
-            f"Resume URL: {application.resume.url if application.resume else 'No file uploaded'}"
+            f"Resume Filename: {os.path.basename(application.resume.name) if application.resume else 'No file uploaded'}\n\n"
+            f"The candidate's resume PDF has been attached directly to this email."
         )
-        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com')
+        send_resend_email(admin_subject, admin_body, 'adriel.joseph2506@gmail.com', attachments=attachments)
 
         # 2. Send confirmation email to candidate
         candidate_subject = f"Application Received: {application.job.title if application.job else 'Position'}"
