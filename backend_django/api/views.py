@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 OTP_STORAGE = {}
 VERIFIED_EMAILS = {}
 
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'sujay@ascension.net.in')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'sunitha.p@ascension.net.in')
 
 def send_resend_email(subject, body, to_email, attachments=None):
     """

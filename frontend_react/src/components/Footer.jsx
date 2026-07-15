@@ -51,10 +51,10 @@ const Footer = () => {
                             <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Support</span>
                         </div>
                         <a
-                            href="mailto:sujay@ascension.net.in"
+                            href="mailto:sunitha.p@ascension.net.in"
                             className="text-xs text-brand-orange font-semibold hover:underline block pt-2 break-all"
                         >
-                            sujay@ascension.net.in
+                            sunitha.p@ascension.net.in
                         </a>
                     </div>
                 </div>
