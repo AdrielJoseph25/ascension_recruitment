@@ -37,6 +37,12 @@ const Footer = () => {
                         >
                             +91 99862 30357
                         </a>
+                        <a
+                            href="tel:+919986230735"
+                            className="text-xs text-brand-orange font-semibold hover:underline block pt-1"
+                        >
+                            +91 99862 30735
+                        </a>
                     </div>
                 </div>
 

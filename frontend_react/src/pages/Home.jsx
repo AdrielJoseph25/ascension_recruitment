@@ -597,7 +597,6 @@ const Home = () => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                placeholder="John Doe"
                                 required
                                 className="w-full px-4 py-3 rounded border border-gray-200 text-xs focus:outline-none focus:border-brand-green transition-colors"
                             />
@@ -620,7 +619,6 @@ const Home = () => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                placeholder="john@example.com"
                                 required
                                 disabled={isVerified}
                                 className="w-full px-4 py-3 rounded border border-gray-200 text-xs focus:outline-none focus:border-brand-green transition-colors disabled:bg-gray-50 disabled:text-gray-400"
