@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, MessageCircle, Clock } from 'lucide-react';
 const Footer = () => {
     return (
         <footer className="bg-brand-green-darkest text-gray-100 pt-16 pb-8 border-t border-white/10">
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
                 {/* Visit Us Card */}
                 <div className="bg-white/5 border border-white/10 p-6 rounded-xl hover:border-brand-orange/30 hover:bg-white/10 transition-all flex flex-col justify-between gap-4 group">
                     <div className="space-y-4">
@@ -91,6 +91,30 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* LinkedIn Card */}
+                <a
+                    href="https://www.linkedin.com/company/ascension-recruitment-india"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Ascension Recruitment on LinkedIn"
+                    className="bg-white/5 border border-white/10 p-6 rounded-xl hover:border-[#0A66C2]/50 hover:bg-white/10 transition-all flex flex-col justify-between gap-4 group"
+                >
+                    <div className="space-y-4">
+                        <div className="p-3 bg-[#0A66C2] text-white rounded-lg w-fit group-hover:scale-110 transition-transform">
+                            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+                            </svg>
+                        </div>
+                        <div className="space-y-1">
+                            <h4 className="text-xs font-bold text-white tracking-widest uppercase">Follow Us</h4>
+                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">LinkedIn</span>
+                        </div>
+                        <span className="text-xs text-brand-orange font-semibold group-hover:underline block pt-2">
+                            Ascension Recruitment India
+                        </span>
+                    </div>
+                </a>
             </div>
 
             {/* Sub-Footer */}
