@@ -16,7 +16,7 @@ const Footer = () => {
                             <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider"></span>
                         </div>
                         <p className="text-xs text-gray-300 leading-relaxed font-light">
-                            126, 4th Cross, Amaris, Maple Meadows Phase-2, Chikkagubbi, Bengaluru - 560077
+                            #127, Ascension, 1st Cross, The Serenity, Doddaballapura Main Rd, Yellupura, Yelahanka, Hosahudya, Karnataka 562163
                         </p>
                     </div>
                 </div>
